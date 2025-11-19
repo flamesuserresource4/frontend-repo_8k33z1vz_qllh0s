@@ -3,8 +3,8 @@
 > vite
 
 
-  VITE v5.4.20  ready in 244 ms
+  VITE v5.4.20  ready in 260 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: http://172.20.3.98:3000/
-2:18:46 PM [vite] Pre-transform error: Failed to resolve import "zod" from "src/components/LeadForm.jsx". Does the file exist?
+2:23:48 PM [vite] Pre-transform error: Failed to resolve import "zod" from "src/components/LeadForm.jsx". Does the file exist?
