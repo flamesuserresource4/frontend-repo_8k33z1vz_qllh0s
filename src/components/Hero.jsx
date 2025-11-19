@@ -1,7 +1,23 @@
-import Spline from '@splinetool/react-spline'
+import React, { Suspense, useEffect, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
+// Lazy load Spline to avoid crashing the page if it fails to initialize
+const LazySpline = React.lazy(() => import('@splinetool/react-spline'))
+
 export default function Hero() {
+  const [splineOk, setSplineOk] = useState(true)
+
+  useEffect(() => {
+    // In some environments, WebGL or cross-origin may fail — keep UI usable
+    const onUnhandledRejection = (e) => {
+      if (String(e?.reason || e).toLowerCase().includes('spline')) {
+        setSplineOk(false)
+      }
+    }
+    window.addEventListener('unhandledrejection', onUnhandledRejection)
+    return () => window.removeEventListener('unhandledrejection', onUnhandledrejection)
+  }, [])
+
   const scrollTo = (id) => {
     const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -9,11 +25,23 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative overflow-hidden min-h-[88vh] flex items-center">
-      <div className="absolute inset-0 opacity-70">
-        <Spline scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+      {/* Background */}
+      <div className="absolute inset-0">
+        {splineOk ? (
+          <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" /> }>
+            <LazySpline.default
+              scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"
+              style={{ width: '100%', height: '100%' }}
+              onError={() => setSplineOk(false)}
+            />
+          </Suspense>
+        ) : (
+          <div className="w-full h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
+        )}
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/50 to-slate-950/80" />
 
+      {/* Content */}
       <div className="relative mx-auto max-w-6xl px-6 py-24 text-center text-white">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 backdrop-blur">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
