@@ -15,7 +15,7 @@ export default function Hero() {
       }
     }
     window.addEventListener('unhandledrejection', onUnhandledRejection)
-    return () => window.removeEventListener('unhandledrejection', onUnhandledrejection)
+    return () => window.removeEventListener('unhandledrejection', onUnhandledRejection)
   }, [])
 
   const scrollTo = (id) => {
@@ -29,7 +29,7 @@ export default function Hero() {
       <div className="absolute inset-0">
         {splineOk ? (
           <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" /> }>
-            <LazySpline.default
+            <LazySpline
               scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"
               style={{ width: '100%', height: '100%' }}
               onError={() => setSplineOk(false)}
