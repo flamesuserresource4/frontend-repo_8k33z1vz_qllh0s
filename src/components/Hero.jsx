@@ -1,23 +1,7 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React from 'react'
 import { ChevronDown } from 'lucide-react'
 
-// Lazy load Spline to avoid crashing the page if it fails to initialize
-const LazySpline = React.lazy(() => import('@splinetool/react-spline'))
-
 export default function Hero() {
-  const [splineOk, setSplineOk] = useState(true)
-
-  useEffect(() => {
-    // In some environments, WebGL or cross-origin may fail — keep UI usable
-    const onUnhandledRejection = (e) => {
-      if (String(e?.reason || e).toLowerCase().includes('spline')) {
-        setSplineOk(false)
-      }
-    }
-    window.addEventListener('unhandledrejection', onUnhandledRejection)
-    return () => window.removeEventListener('unhandledrejection', onUnhandledRejection)
-  }, [])
-
   const scrollTo = (id) => {
     const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -25,19 +9,9 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative overflow-hidden min-h-[88vh] flex items-center">
-      {/* Background */}
+      {/* Static, performant background */}
       <div className="absolute inset-0">
-        {splineOk ? (
-          <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" /> }>
-            <LazySpline
-              scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"
-              style={{ width: '100%', height: '100%' }}
-              onError={() => setSplineOk(false)}
-            />
-          </Suspense>
-        ) : (
-          <div className="w-full h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
-        )}
+        <div className="w-full h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/50 to-slate-950/80" />
 
